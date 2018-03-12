@@ -1,0 +1,19 @@
+{
+  "name": "canvasjs_typescript",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/M1MIAGTeamPallaMu/CanvasJS_Typescript.git"
+  },
+  "author": "Abraham Mubanzo & Hugo Palla",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/M1MIAGTeamPallaMu/CanvasJS_Typescript/issues"
+  },
+  "homepage": "https://github.com/M1MIAGTeamPallaMu/CanvasJS_Typescript#readme"
+}
