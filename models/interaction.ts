@@ -19,14 +19,14 @@ export class DnD{
         this.yFinal = 0;
     }
 
-    select(evt : {x, y}) : void {
+    select(evt : MouseEvent) : void {
         this.xInit = DnD.getMousePosition(this.canvas, evt).newX;
         this.yInit = DnD.getMousePosition(this.canvas, evt).newY;
         console.log(this.xInit, this.yInit);
         this.pressed = true;
     }
 
-    move(evt : {x, y}) : void {
+    move(evt : MouseEvent) : void {
         if(this.pressed){
             this.xFinal = DnD.getMousePosition(this.canvas, evt).newX;
             this.yFinal = DnD.getMousePosition(this.canvas, evt).newY;
@@ -34,17 +34,19 @@ export class DnD{
         }
     }
 
-    release(evt : {x, y}) : void {
+   release(evt : MouseEvent) : void {
         this.xFinal = DnD.getMousePosition(this.canvas, evt).newX;
         this.yFinal = DnD.getMousePosition(this.canvas, evt).newY;
         this.pressed = false;
+        console.log(this.xFinal);
+        console.log(this.yFinal);
     }
 
-    public static getMousePosition(canvas, evt: {x, y}){
+    public static getMousePosition(canvas, evt: MouseEvent){
         let rect = canvas.getBoundingClientRect();
         return {
-            newX : evt.x - rect.left,
-            newY : evt.y - rect.top
+            newX : evt.clientX - rect.left,
+            newY : evt.clientY - rect.top
         }
     }
 
