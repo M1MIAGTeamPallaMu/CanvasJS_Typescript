@@ -13,7 +13,6 @@ export class Shape {
         this.yFinal = yFinal;
         this.lineWidth = lineWidth;
         this.color = color;
-
     }
 
     get color(): string {
