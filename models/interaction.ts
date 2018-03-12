@@ -10,6 +10,7 @@ export class DnD{
     constructor (canvas, interactor?) {
         this.canvas = canvas;
         this.interactor = interactor;
+        this.initCoordinates();
     }
     initCoordinates() : void {
         this.xInit = 0;
