@@ -7,6 +7,8 @@ export class Drawing{
     }
 
     addShape(shape : Shape) : void {
+        console.log("Ok I'm in");
+        console.log(shape.colour, shape.thickness);
         this._shapes.push(shape);
     }
 
