@@ -1,6 +1,6 @@
 import {DnD} from "./models/interaction";
 import {Drawing, Line, Rectangle} from "./models/model";
-import {linePaint, rectPaint} from "./view/view";
+import {drawPaint} from "./view/view";
 
 class Main {
     private _canvas;
@@ -37,23 +37,21 @@ class Main {
         let rec1 = new Rectangle('#37e1ee', 120, 50, 100, 105,210);
         let rec2 = new Rectangle('#cc3b3b', 220, 450, 300, 55, 70);
 
-        rectPaint(this.ctx, rec);
-        rectPaint(this.ctx, rec1);
-        rectPaint(this.ctx, rec2);
-
-        drawing.addShape(rec);
-        drawing.addShape(rec1);
-        drawing.addShape(rec2);
 
         let line1 = new Line('#cc8575', 40, 50, 100, 225, 710);
         let line2 = new Line('#ccb55b', 30, 50, 200, 250, 410);
         let line3 = new Line('#4164cc', 50, 50, 300, 600, 190);
 
-        linePaint(this.ctx, line1);
-        linePaint(this.ctx, line2);
-        linePaint(this.ctx, line3);
+        drawing.addShape(rec);
+        drawing.addShape(rec1);
+        drawing.addShape(rec2);
+        drawing.addShape(line1);
+        drawing.addShape(line2);
+        drawing.addShape(line3);
 
+        drawPaint(this.ctx, drawing, this.canvas);
     }
+
 
     get canvas(): any {
         return this._canvas;
