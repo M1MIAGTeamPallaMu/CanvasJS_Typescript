@@ -67,56 +67,65 @@ export class Controller {
     };
 
     onInteractionStart(dnd: DnD) {
+        dnd = this.dragNdrop;
         this.currLineWidth = +(<HTMLInputElement>document.getElementById('spinnerWidth')).value;
         this.currColour = (<HTMLInputElement>document.getElementById('color')).value;
-        if((<HTMLInputElement>document.getElementById('butRect')).checked){
+        if ((<HTMLInputElement>document.getElementById('butRect')).checked) {
             this.currEditingMode = this._editingMode.rect;
         }
-        if((<HTMLInputElement>document.getElementById('butLine')).checked){
+        if ((<HTMLInputElement>document.getElementById('butLine')).checked) {
             this.currEditingMode = this._editingMode.line;
         }
 
         //Switch sur une ligne ou un rectangle et affectation à la forme courante
-        switch(this.currEditingMode){
-            case this._editingMode.line:
+        switch (this.currEditingMode) {
+            case this._editingMode.rect:
                 console.log("Un rectangle");
-                this.currentShape = new Rectangle(this.currColour,this.currLineWidth, dnd.xInit, dnd.yInit, 0, 0);
-                rectPaint(this.ctx,this.currentShape);
+                this.currentShape = new Rectangle(this.currColour, this.currLineWidth, dnd.xInit, dnd.yInit, 0, 0);
                 break;
             case this._editingMode.line:
                 console.log("Une ligne");
-                this.currentShape = new Line(this.currColour,this.currLineWidth, dnd.xInit, dnd.yInit, dnd.xFinal, dnd.yFinal);
-                linePaint(this.ctx,this.currentShape);
+                this.currentShape = new Line(this.currColour, this.currLineWidth, dnd.xInit, dnd.yInit, dnd.xFinal, dnd.yFinal);
                 break;
-
         }
     };
 
     onInteractionUpdate(dnd: DnD) {
+        dnd = this.dragNdrop;
         switch (this.currEditingMode) {
-            case 0:
-                this.currentShape = new Rectangle(this.currColour,this.currLineWidth, dnd.xInit, dnd.yInit, 0, 0);
+            case this._editingMode.rect:
+                let width = dnd.xFinal - dnd.xInit;
+                let height = dnd.yFinal - dnd.yInit;
+                console.log("Un rectangle");
+                this.currentShape = new Rectangle(this.currColour, this.currLineWidth, dnd.xInit, dnd.yInit, width, height);
                 rectPaint(this.ctx,this.currentShape);
                 break;
-            case 1:
-                this.currentShape = new Line(this.currColour,this.currLineWidth, dnd.xInit, dnd.yInit, dnd.xFinal, dnd.yFinal);
+            case this._editingMode.line:
+                console.log("Une ligne");
+                this.currentShape = new Line(this.currColour, this.currLineWidth, dnd.xInit, dnd.yInit, dnd.xFinal, dnd.yFinal);
                 linePaint(this.ctx,this.currentShape);
                 break;
         }
-        drawPaint(this.ctx,this.drawing, this.canvas);
+        this.ctx.clearRect(0, 0, +this.canvas.style.width, +this.canvas.style.height);
+        drawPaint(this.ctx, this.drawing, this.canvas);
     };
 
     onInteractionEnd(dnd: DnD) {
+        dnd = this.dragNdrop;
         switch (this.currEditingMode) {
-            case 0:
-                this.currentShape = new Rectangle(this.currColour,this.currLineWidth, dnd.xInit, dnd.yInit, 0, 0);
-                rectPaint(this.ctx,this.currentShape);
+            case this._editingMode.rect:
+                let width = dnd.xFinal - dnd.xInit;
+                let height = dnd.yFinal - dnd.yInit;
+                console.log("Un rectangle");
+                this.currentShape = new Rectangle(this.currColour, this.currLineWidth, dnd.xInit, dnd.yInit, width, height);
                 break;
-            case 1:
-                this.currentShape = new Line(this.currColour,this.currLineWidth, dnd.xInit, dnd.yInit, dnd.xFinal, dnd.yFinal);
-                linePaint(this.ctx,this.currentShape);
+            case this._editingMode.line:
+                console.log("Une ligne");
+                this.currentShape = new Line(this.currColour, this.currLineWidth, dnd.xInit, dnd.yInit, dnd.xFinal, dnd.yFinal);
                 break;
         }
-        drawPaint(this.ctx,this.drawing, this.canvas);
+        this.drawing.addShape(this.currentShape);
+        this.ctx.clearRect(0, 0, +this.canvas.style.width, +this.canvas.style.height);
+        drawPaint(this.ctx, this.drawing, this.canvas);
     };
 }
