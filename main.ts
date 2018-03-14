@@ -1,6 +1,7 @@
 import {DnD} from "./models/interaction";
 import {Drawing, Line, Rectangle} from "./models/model";
 import {drawPaint} from "./view/view";
+import {Controller} from "./controller/controller";
 
 class Main {
     private _canvas;
@@ -52,6 +53,12 @@ class Main {
         drawPaint(this.ctx, drawing, this.canvas);
     }
 
+    appTest(){
+        let drawing = new Drawing();
+        let pencil = new Controller(this.ctx, drawing, this.canvas);
+        pencil.pencil();
+    }
+
 
     get canvas(): any {
         return this._canvas;
@@ -80,4 +87,5 @@ class Main {
 
 let test = new Main();
 //test.DnDTest();
-test.DrawTest();
+//test.DrawTest();
+test.appTest();
