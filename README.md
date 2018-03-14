@@ -6,6 +6,9 @@ We wanted to experience the power of Typescript.
 *   Sample images
 
     ![gramgram](/gramgram.png)
+    
+    ![abstract](/abstract.png)
+
 
 # Installation
 
