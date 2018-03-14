@@ -1,6 +1,11 @@
 # CanvasJS_Typescript
+
 This lab session was developped using Typescript instead of Javascript.
 We wanted to experience the power of Typescript.
+
+*   Sample images
+
+    ![gramgram](/gramgram.png)
 
 # Installation
 
