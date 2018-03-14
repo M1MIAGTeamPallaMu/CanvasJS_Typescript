@@ -19,7 +19,7 @@ export class DnD {
         this.canvas.onmousemove = (event: MouseEvent) => {
             this.move(event);
         };
-        this.canvas.onmouseleave = (event: MouseEvent) => {
+        this.canvas.onmouseup = (event: MouseEvent) => {
             this.release(event);
         };
     }
