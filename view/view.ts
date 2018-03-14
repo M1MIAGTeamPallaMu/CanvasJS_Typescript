@@ -1,13 +1,13 @@
 import {Drawing, Line, Rectangle, Shape} from "../models/model";
 
 export function drawPaint(ctx: CanvasRenderingContext2D, draw: Drawing, canvas) {
-    ctx.fillStyle = '#F0F0F0'; // set canvas' background color
+    ctx.fillStyle = "#F0F0F0"; // set canvas' background color
     ctx.fillRect(0, 0, canvas.width, canvas.height);
-    for(let shapeElement of draw.shapes){
+    for (const shapeElement of draw.shapes) {
         this.shapePaint(ctx, shapeElement);
         if (shapeElement instanceof Rectangle) {
             this.rectPaint(ctx, shapeElement);
-        } else if( shapeElement instanceof Line) {
+        } else if ( shapeElement instanceof Line) {
             this.linePaint(ctx, shapeElement);
         }
     }

@@ -9,7 +9,7 @@ export class DnD {
     private _yFinal: number;
     private _pressed: boolean;
 
-    constructor(canvas, interactor?:Controller) {
+    constructor(canvas, interactor?: Controller) {
         this.canvas = canvas;
         this.interactor = interactor;
         this.initCoordinates();
@@ -24,44 +24,41 @@ export class DnD {
         };
     }
 
-    initCoordinates(): void {
+    public initCoordinates(): void {
         this.xInit = 0;
         this.yInit = 0;
         this.xFinal = 0;
         this.yFinal = 0;
     }
 
-    select(evt: MouseEvent): void {
+    public select(evt: MouseEvent): void {
         this.xInit = DnD.getMousePosition(this.canvas, evt).newX;
         this.yInit = DnD.getMousePosition(this.canvas, evt).newY;
         this.interactor.onInteractionStart(this);
-        console.log(this.xInit, this.yInit);
         this.pressed = true;
     }
 
-    move(evt: MouseEvent): void {
+    public move(evt: MouseEvent): void {
         if (this.pressed) {
             this.xFinal = DnD.getMousePosition(this.canvas, evt).newX;
             this.yFinal = DnD.getMousePosition(this.canvas, evt).newY;
-            console.log(this.xFinal, this.yFinal);
             this.interactor.onInteractionUpdate(this);
         }
     }
 
-    release(evt: MouseEvent): void {
+    public release(evt: MouseEvent): void {
         this.xFinal = DnD.getMousePosition(this.canvas, evt).newX;
         this.yFinal = DnD.getMousePosition(this.canvas, evt).newY;
         this.pressed = false;
-        console.log(this.xFinal, this.yFinal);
         this.interactor.onInteractionEnd(this);
     }
 
-    static getMousePosition(canvas, evt: MouseEvent) {
-        let rect = canvas.getBoundingClientRect();
+    public static getMousePosition(canvas, evt: MouseEvent) {
+        const rect = canvas.getBoundingClientRect();
         return {
             newX: evt.clientX - rect.left,
-            newY: evt.clientY - rect.top
-        }
+            newY: evt.clientY - rect.top,
+        };
     }
 
     get yFinal(): number {

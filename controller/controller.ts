@@ -3,20 +3,21 @@ import {Drawing, Line, Rectangle} from "../models/model";
 import {drawPaint, linePaint, rectPaint} from "../view/view";
 
 export class Controller {
+    private dragNdrop: DnD;
+    private drawing: Drawing;
+    private ctx: CanvasRenderingContext2D;
+    private canvas: HTMLElement;
+    private _editingMode = {rect: 0, line: 1, circle: 2};
+    private _currEditingMode: number | SVGLineElement;
+    private _currLineWidth: number;
+    private _currColour: string;
+    private _currentShape: any;
 
     constructor(ctx: CanvasRenderingContext2D, drawing: Drawing, canvas: HTMLElement) {
         this.drawing = drawing;
         this.ctx = ctx;
         this.canvas = canvas;
     }
-
-    private dragNdrop: DnD;
-    private drawing: Drawing;
-    private ctx: CanvasRenderingContext2D;
-    private canvas: HTMLElement;
-    private _editingMode = {rect: 0, line: 1, circle: 2};
-
-    private _currEditingMode: number | SVGLineElement;
 
     get currEditingMode(): number | SVGLineElement {
         return this._currEditingMode;
@@ -26,8 +27,6 @@ export class Controller {
         this._currEditingMode = value;
     }
 
-    private _currLineWidth: number;
-
     get currLineWidth(): number {
         return this._currLineWidth;
     }
@@ -35,8 +34,6 @@ export class Controller {
     set currLineWidth(value: number) {
         this._currLineWidth = value;
     }
-
-    private _currColour: string;
 
     get currColour(): string {
         return this._currColour;
@@ -46,8 +43,6 @@ export class Controller {
         this._currColour = value;
     }
 
-    private _currentShape: any;
-
     get currentShape(): Rectangle | Line {
         return this._currentShape;
     }
@@ -56,67 +51,59 @@ export class Controller {
         this._currentShape = shape;
     }
 
-    pencil() {
-        console.log("ok it begins here");
+    public pencil() {
         this._currEditingMode = this._editingMode.line;
         this._currLineWidth = 5;
-        this._currColour = '#ff9c7a';
+        this._currColour = "#ff9c7a";
         this._currentShape = 0;
-        // Liez ici les widgets à la classe pour modifier les attributs présents ci-dessus.
         this.dragNdrop = new DnD(this.canvas, this);
-    };
+    }
 
-    onInteractionStart(dnd: DnD) {
+    public onInteractionStart(dnd: DnD) {
         dnd = this.dragNdrop;
-        this.currLineWidth = +(<HTMLInputElement>document.getElementById('spinnerWidth')).value;
-        this.currColour = (<HTMLInputElement>document.getElementById('color')).value;
-        if ((<HTMLInputElement>document.getElementById('butRect')).checked) {
+        this.currLineWidth = +(document.getElementById("spinnerWidth") as HTMLInputElement).value;
+        this.currColour = (document.getElementById("color") as HTMLInputElement).value;
+        if ((document.getElementById("butRect") as HTMLInputElement).checked) {
             this.currEditingMode = this._editingMode.rect;
         }
-        if ((<HTMLInputElement>document.getElementById('butLine')).checked) {
+        if ((document.getElementById("butLine") as HTMLInputElement).checked) {
             this.currEditingMode = this._editingMode.line;
         }
 
-        //Switch sur une ligne ou un rectangle et affectation à la forme courante
         switch (this.currEditingMode) {
             case this._editingMode.rect:
-                console.log("Un rectangle");
                 this.currentShape = new Rectangle(this.currColour, this.currLineWidth, dnd.xInit, dnd.yInit, 0, 0);
                 break;
             case this._editingMode.line:
-                console.log("Une ligne");
                 this.currentShape = new Line(this.currColour, this.currLineWidth, dnd.xInit, dnd.yInit, dnd.xFinal, dnd.yFinal);
                 break;
         }
-    };
+    }
 
-    onInteractionUpdate(dnd: DnD) {
+    public onInteractionUpdate(dnd: DnD) {
         dnd = this.dragNdrop;
         switch (this.currEditingMode) {
             case this._editingMode.rect:
-                let width = dnd.xFinal - dnd.xInit;
-                let height = dnd.yFinal - dnd.yInit;
-                console.log("Un rectangle");
+                const width = dnd.xFinal - dnd.xInit;
+                const height = dnd.yFinal - dnd.yInit;
                 this.currentShape = new Rectangle(this.currColour, this.currLineWidth, dnd.xInit, dnd.yInit, width, height);
-                rectPaint(this.ctx,this.currentShape);
+                rectPaint(this.ctx, this.currentShape);
                 break;
             case this._editingMode.line:
-                console.log("Une ligne");
                 this.currentShape = new Line(this.currColour, this.currLineWidth, dnd.xInit, dnd.yInit, dnd.xFinal, dnd.yFinal);
-                linePaint(this.ctx,this.currentShape);
+                linePaint(this.ctx, this.currentShape);
                 break;
         }
         this.ctx.clearRect(0, 0, +this.canvas.style.width, +this.canvas.style.height);
         drawPaint(this.ctx, this.drawing, this.canvas);
-    };
+    }
 
-    onInteractionEnd(dnd: DnD) {
+    public onInteractionEnd(dnd: DnD) {
         dnd = this.dragNdrop;
         switch (this.currEditingMode) {
             case this._editingMode.rect:
-                let width = dnd.xFinal - dnd.xInit;
-                let height = dnd.yFinal - dnd.yInit;
-                console.log("Un rectangle");
+                const width = dnd.xFinal - dnd.xInit;
+                const height = dnd.yFinal - dnd.yInit;
                 this.currentShape = new Rectangle(this.currColour, this.currLineWidth, dnd.xInit, dnd.yInit, width, height);
                 break;
             case this._editingMode.line:
@@ -127,5 +114,5 @@ export class Controller {
         this.drawing.addShape(this.currentShape);
         this.ctx.clearRect(0, 0, +this.canvas.style.width, +this.canvas.style.height);
         drawPaint(this.ctx, this.drawing, this.canvas);
-    };
+    }
 }

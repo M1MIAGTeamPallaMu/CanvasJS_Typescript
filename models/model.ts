@@ -1,24 +1,24 @@
-export class Drawing{
+export class Drawing {
 
-    private _shapes : Array<Shape>;
+    private _shapes: Shape[];
 
     constructor() {
         this._shapes = [];
     }
 
-    addShape(shape : Shape) : void {
+    public addShape(shape: Shape): void {
         console.log("Ok I'm in");
         console.log(shape.colour, shape.thickness);
         this._shapes.push(shape);
     }
 
-    removeShape(index:number) : void {
+    public removeShape(index: number): void {
         if (index > -1) {
             this._shapes.splice(index, 1);
         }
     }
 
-    get shapes(): Array<Shape> {
+    get shapes(): Shape[] {
         return this._shapes;
     }
 
@@ -49,7 +49,6 @@ export class Shape {
         this._thickness = value;
     }
 }
-
 
 export class Rectangle extends Shape {
 
@@ -98,13 +97,13 @@ export class Rectangle extends Shape {
         this._width = value;
     }
 
-    xCoordinateFinal () : number {
+    public xCoordinateFinal(): number {
         return this.xCoordinate + this.width;
-    };
+    }
 
-    yCoordinateFinal() : number {
+    public yCoordinateFinal(): number {
         return this.yCoordinate + this.height;
-    };
+    }
 }
 
 export class Line extends Shape {
@@ -153,6 +152,5 @@ export class Line extends Shape {
     set yCoordinateFinal(value: number) {
         this._yCoordinateFinal = value;
     }
-
 
 }
