@@ -1,4 +1,4 @@
-import {controller} from "../controller/controller";
+import {Controller} from "../controller/controller";
 
 export class DnD {
     private _canvas;
@@ -9,10 +9,19 @@ export class DnD {
     private _yFinal: number;
     private _pressed: boolean;
 
-    constructor(canvas, interactor?:controller) {
+    constructor(canvas, interactor?:Controller) {
         this.canvas = canvas;
         this.interactor = interactor;
         this.initCoordinates();
+        this.canvas.onmousedown = (event: MouseEvent) => {
+            this.select(event);
+        };
+        this.canvas.onmousemove = (event: MouseEvent) => {
+            this.move(event);
+        };
+        this.canvas.onmouseleave = (event: MouseEvent) => {
+            this.release(event);
+        };
     }
 
     initCoordinates(): void {
@@ -110,5 +119,4 @@ export class DnD {
     set pressed(value: boolean) {
         this._pressed = value;
     }
-
 }
