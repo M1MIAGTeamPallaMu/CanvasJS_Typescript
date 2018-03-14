@@ -1,22 +1,20 @@
 import {DnD} from "../models/interaction";
-import {Drawing, Line, Rectangle, Shape} from "../models/model";
-import {drawPaint} from "../view/view";
+import {Drawing, Line, Rectangle} from "../models/model";
+import {drawPaint, linePaint, rectPaint} from "../view/view";
 
-export class controller {
+export class Controller {
+
+    constructor(ctx: CanvasRenderingContext2D, drawing: Drawing, canvas: HTMLElement) {
+        this.drawing = drawing;
+        this.ctx = ctx;
+        this.canvas = canvas;
+    }
+
     private dragNdrop: DnD;
     private drawing: Drawing;
     private ctx: CanvasRenderingContext2D;
     private canvas: HTMLElement;
-
-    private _editingMode = {rect: 0, line: 1};
-
-    get editingMode(): { rect: number; line: number } {
-        return this._editingMode;
-    }
-
-    set editingMode(value: { rect: number; line: number }) {
-        this._editingMode = value;
-    }
+    private _editingMode = {rect: 0, line: 1, circle: 2};
 
     private _currEditingMode: number | SVGLineElement;
 
@@ -48,73 +46,77 @@ export class controller {
         this._currColour = value;
     }
 
-    private _currentShape: Shape;
+    private _currentShape: any;
 
-    get currentShape(): Shape {
+    get currentShape(): Rectangle | Line {
         return this._currentShape;
     }
 
-    set currentShape(shape: Shape) {
+    set currentShape(shape: Rectangle | Line) {
         this._currentShape = shape;
     }
 
-    pencil(ctx, drawing, canvas) {
+    pencil() {
+        console.log("ok it begins here");
         this._currEditingMode = this._editingMode.line;
         this._currLineWidth = 5;
         this._currColour = '#ff9c7a';
-        this._currentShape = null;
-        this.ctx = ctx;
-        this.drawing = drawing;
-        this.canvas = canvas;
+        this._currentShape = 0;
         // Liez ici les widgets à la classe pour modifier les attributs présents ci-dessus.
-        this.dragNdrop = new DnD(canvas, this);
+        this.dragNdrop = new DnD(this.canvas, this);
     };
 
-    onInteractionStart() {
+    onInteractionStart(dnd: DnD) {
         this.currLineWidth = +(<HTMLInputElement>document.getElementById('spinnerWidth')).value;
-        this.currColour = (<HTMLInputElement>document.getElementById('colour')).value;
-        let recButton = (<HTMLInputElement>document.getElementById('butRect')).checked;
-        let lineButton = (<HTMLInputElement>document.getElementById('butLine')).checked;
-        if (recButton) {
-            this.currEditingMode = 0;
-        } else if (lineButton) {
-            this.currEditingMode = 1;
+        this.currColour = (<HTMLInputElement>document.getElementById('color')).value;
+        if((<HTMLInputElement>document.getElementById('butRect')).checked){
+            this.currEditingMode = this._editingMode.rect;
+        }
+        if((<HTMLInputElement>document.getElementById('butLine')).checked){
+            this.currEditingMode = this._editingMode.line;
         }
 
-        //switch sur une ligne ou un rectangle et affectation à la forme courante
-        console.log(this.currEditingMode);
-        switch (this.currEditingMode) {
+        //Switch sur une ligne ou un rectangle et affectation à la forme courante
+        switch(this.currEditingMode){
+            case this._editingMode.line:
+                console.log("Un rectangle");
+                this.currentShape = new Rectangle(this.currColour,this.currLineWidth, dnd.xInit, dnd.yInit, 0, 0);
+                rectPaint(this.ctx,this.currentShape);
+                break;
+            case this._editingMode.line:
+                console.log("Une ligne");
+                this.currentShape = new Line(this.currColour,this.currLineWidth, dnd.xInit, dnd.yInit, dnd.xFinal, dnd.yFinal);
+                linePaint(this.ctx,this.currentShape);
+                break;
 
-            case 0:
-                this.currentShape = new Rectangle(this.currColour, this.dragNdrop.xInit, this.dragNdrop.yInit
-                    , 0, 0, this.currLineWidth);
-                break;
-            case 1:
-                this.currentShape = new Line(this.currColour, this.dragNdrop.xInit, this.dragNdrop.yInit
-                    , 0, 0, this.currLineWidth);
-                break;
         }
-        this.drawing.addShape(this.currentShape);
-        drawPaint(this.ctx, this.drawing, this.canvas);
-        //this.currentShape.paint(ctx, canvas);
     };
 
-    onInteractionUpdate() {
+    onInteractionUpdate(dnd: DnD) {
         switch (this.currEditingMode) {
             case 0:
-                this.currentShape = new Rectangle(this.currColour, this.dragNdrop.xInit, this.dragNdrop.yInit
-                    , 0, 0, this.currLineWidth);
+                this.currentShape = new Rectangle(this.currColour,this.currLineWidth, dnd.xInit, dnd.yInit, 0, 0);
+                rectPaint(this.ctx,this.currentShape);
                 break;
             case 1:
-                this.currentShape = new Line(this.currColour, this.dragNdrop.xInit, this.dragNdrop.yInit
-                    , 0, 0, this.currLineWidth);
+                this.currentShape = new Line(this.currColour,this.currLineWidth, dnd.xInit, dnd.yInit, dnd.xFinal, dnd.yFinal);
+                linePaint(this.ctx,this.currentShape);
                 break;
         }
-        this.drawing.addShape(this.currentShape);
-        drawPaint(this.ctx, this.drawing, this.canvas);
+        drawPaint(this.ctx,this.drawing, this.canvas);
     };
 
-    onInteractionEnd() {
-
+    onInteractionEnd(dnd: DnD) {
+        switch (this.currEditingMode) {
+            case 0:
+                this.currentShape = new Rectangle(this.currColour,this.currLineWidth, dnd.xInit, dnd.yInit, 0, 0);
+                rectPaint(this.ctx,this.currentShape);
+                break;
+            case 1:
+                this.currentShape = new Line(this.currColour,this.currLineWidth, dnd.xInit, dnd.yInit, dnd.xFinal, dnd.yFinal);
+                linePaint(this.ctx,this.currentShape);
+                break;
+        }
+        drawPaint(this.ctx,this.drawing, this.canvas);
     };
 }
